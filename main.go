@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/md5"
+	"flag"
 	"fmt"
 	"os"
 
@@ -9,7 +10,11 @@ import (
 )
 
 func main() {
-	baseFolderPath := "."
+
+	baseFolderPath := ""
+	flag.StringVar(&baseFolderPath, "folder", ".\\", "Specifies a folder to find duplicate files in")
+	flag.Parse()
+
 	fileList, err := os.ReadDir(baseFolderPath)
 
 	bar := pb.StartNew(len(fileList))
