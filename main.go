@@ -58,3 +58,24 @@ func main() {
 	bar.Finish()
 	fmt.Printf("%d channels", duplicateFiles)
 }
+
+func findFilePaths(path string) []string {
+	var files []string
+
+	fileList, err := os.ReadDir(path)
+
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range fileList {
+
+		if file.IsDir() {
+			files = append(files, findFilePaths(path+"/"+file.Name())...)
+		} else {
+			files = append(files, path+"/"+file.Name())
+		}
+	}
+
+	return files
+
+}
