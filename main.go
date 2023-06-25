@@ -15,13 +15,10 @@ func main() {
 	flag.StringVar(&baseFolderPath, "folder", ".\\", "Specifies a folder to find duplicate files in")
 	flag.Parse()
 
-	fileList, err := os.ReadDir(baseFolderPath)
+	fileList := findFilePaths(baseFolderPath)
 
 	bar := pb.StartNew(len(fileList))
 
-	if err != nil {
-		panic(err)
-	}
 	var m map[string]string
 	m = make(map[string]string)
 
@@ -32,27 +29,26 @@ func main() {
 
 		bar.Increment()
 
-		if !file.IsDir() {
-			data, err := os.ReadFile(baseFolderPath + file.Name())
+		data, err := os.ReadFile(file)
 
-			if err != nil {
-				panic(err)
-			}
-
-			hashed := md5.Sum(data)
-			// text := string(data)
-			// fmt.Printf("%x %s\n", hashed, file.Name())
-			hashedstring := fmt.Sprint("%x", hashed)
-
-			i, ok := m[hashedstring]
-
-			if ok {
-				fmt.Printf("Found conflicting hash %s and %s\n", i, file.Name())
-				duplicateFiles = append(duplicateFiles, i+" "+file.Name()+"\n")
-			} else {
-				m[hashedstring] = file.Name()
-			}
+		if err != nil {
+			panic(err)
 		}
+
+		hashed := md5.Sum(data)
+		// text := string(data)
+		// fmt.Printf("%x %s\n", hashed, file.Name())
+		hashedstring := fmt.Sprint("%x", hashed)
+
+		i, ok := m[hashedstring]
+
+		if ok {
+			fmt.Printf("Found conflicting hash %s and %s\n", i, file)
+			duplicateFiles = append(duplicateFiles, i+" "+file+"\n")
+		} else {
+			m[hashedstring] = file
+		}
+
 	}
 
 	bar.Finish()
