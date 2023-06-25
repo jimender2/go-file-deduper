@@ -67,12 +67,17 @@ func findFilePaths(path string) []string {
 	if err != nil {
 		panic(err)
 	}
+
+	if path[len(path)-1:] != "\\" {
+		path = path + "\\"
+	}
+
 	for _, file := range fileList {
 
 		if file.IsDir() {
-			files = append(files, findFilePaths(path+"/"+file.Name())...)
+			files = append(files, findFilePaths(path+file.Name())...)
 		} else {
-			files = append(files, path+"/"+file.Name())
+			files = append(files, path+file.Name())
 		}
 	}
 
