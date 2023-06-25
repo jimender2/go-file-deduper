@@ -25,7 +25,7 @@ func main() {
 	var m map[string]string
 	m = make(map[string]string)
 
-	var channels []string // an empty list
+	var duplicateFiles []string // an empty list
 
 	// loop through the fileList
 	for _, file := range fileList {
@@ -48,7 +48,7 @@ func main() {
 
 			if ok {
 				fmt.Printf("Found conflicting hash %s and %s\n", i, file.Name())
-				channels = append(channels, i+" "+file.Name()+"\n")
+				duplicateFiles = append(duplicateFiles, i+" "+file.Name()+"\n")
 			} else {
 				m[hashedstring] = file.Name()
 			}
@@ -56,5 +56,5 @@ func main() {
 	}
 
 	bar.Finish()
-	fmt.Printf("%d channels", channels)
+	fmt.Printf("%d channels", duplicateFiles)
 }
