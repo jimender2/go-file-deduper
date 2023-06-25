@@ -36,14 +36,11 @@ func main() {
 		}
 
 		hashed := md5.Sum(data)
-		// text := string(data)
-		// fmt.Printf("%x %s\n", hashed, file.Name())
 		hashedstring := fmt.Sprint("%x", hashed)
 
 		i, ok := m[hashedstring]
 
 		if ok {
-			fmt.Printf("Found conflicting hash %s and %s\n", i, file)
 			duplicateFiles = append(duplicateFiles, i+" "+file+"\n")
 		} else {
 			m[hashedstring] = file
@@ -52,7 +49,12 @@ func main() {
 	}
 
 	bar.Finish()
-	fmt.Printf("%d channels", duplicateFiles)
+
+	for _, i := range duplicateFiles {
+		fmt.Printf("Found Conflicting hash %s\n", i)
+	}
+
+	fmt.Printf("%i", len(duplicateFiles))
 }
 
 func findFilePaths(path string) []string {
